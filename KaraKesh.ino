@@ -65,45 +65,7 @@ void setup() {
 }
 
 void loop() {
-  int buttonreading = digitalRead(BUTTON_PIN);
-
-  // Check for button press (LOW when pressed with INPUT_PULLUP)
-  if (buttonreading != lastreading) {
-    if (buttonreading == LOW && !buttonHandled) {
-      // Cycle to next mode
-      switch (currentmode) {
-        case LightMode::Mode1:
-          currentmode = LightMode::Mode2;
-          Serial.println("Switched to Mode 2");
-          break;
-        case LightMode::Mode2:
-          currentmode = LightMode::Mode3;
-          Serial.println("Switched to Mode 3");
-          break;
-        case LightMode::Mode3:
-          currentmode = LightMode::Mic;
-          Serial.println("Switched to Mic Mode");
-          break;
-        case LightMode::Mic:
-          currentmode = LightMode::Flash;
-          Serial.println("Switched to Flashlight");
-          break;
-        case LightMode::Flash:
-          currentmode = LightMode::Overbright;
-          Serial.println("Switched to Overbright mode");
-          break;
-        case LightMode::Overbright:
-          currentmode = LightMode::Mode1;
-          Serial.println("Switched to Mode 1");
-          break;  
-      }
-      buttonHandled = true;
-    }
-    lastreading = buttonreading;
-  } else if (buttonreading == HIGH) {
-    buttonHandled = false;
-  }
-
+  checkButton();
   // Run current mode
   switch (currentmode) {
     case LightMode::Mode1:
@@ -418,9 +380,17 @@ void checkButton() {
           Serial.println("Button: Switched to Mic Mode");
           break;
         case LightMode::Mic:
-          currentmode = LightMode::Mode1;
-          Serial.println("Button: Switched to Mode 1");
+          currentmode = LightMode::Flash;
+          Serial.println("Button: Switched to Flashlight");
           break;
+        case LightMode::Flash:
+          currentmode = LightMode::Overbright;
+          Serial.println("Switched to Overbright mode");
+          break;
+        case LightMode::Overbright:
+          currentmode = LightMode::Mode1;
+          Serial.println("Switched to Mode 1");
+          break; 
       }
       buttonHandled = true;
     }
